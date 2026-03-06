@@ -1,0 +1,13 @@
+name: Compare Coverage
+description: Compare coverage between base and head refs
+inputs:
+  token:
+    description: Secret GitHub token
+  base-summary:
+    description: Base ref json-summary report
+  head-summary:
+    description: Head ref json-summary report
+
+runs:
+  using: node20
+  main: compare-coverage.js

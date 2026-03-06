@@ -1,0 +1,76 @@
+name: Coverage Badge
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  pages: write
+  id-token: write
+
+jobs:
+  generate-coverage-badge:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write # needed to commit the changes
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.11.0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm i
+
+      - name: Test
+        run: pnpm test:ci
+
+      - name: Install badgen
+        run: pnpm i badgen
+
+      - name: Generate Coverage Badge
+        uses: ./.github/actions/generate-coverage-badge
+        with:
+          summary: ./coverage/coverage-summary.json
+
+      - name: Copy badge to temp gh-pages, commit, and push
+        run: |
+          # set gh identity - need to tell gh that the automation is doing this
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+
+          # clone gh-pages to a temp directory
+          git fetch origin gh-pages
+          git worktree add /tmp/gh-pages gh-pages
+
+          # copy badge svg - copying this svg file into the root directory of
+          # the gh-pages branch will make it publically available at the url
+          # https://raw.githubusercontent.com/<user>/<repo>/gh-pages/coverage.svg
+          # when gh-pages is deployed
+          cp coverage.svg /tmp/gh-pages
+
+          # commit badge and push - this will trigger a gh-pages deployment with
+          # our badge available as raw user content
+          cd /tmp/gh-pages
+          git add coverage.svg
+          git commit -m "update coverage badge"
+          git push origin gh-pages
+
+          # cleanup
+          cd -
+          git worktree remove /tmp/gh-pages

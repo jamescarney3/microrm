@@ -1,0 +1,11 @@
+name: Generate Coverage Badge
+description: Read test coverage report and
+inputs:
+  token:
+    description: Secret GitHub token
+  summary:
+    description: json-summary report
+
+runs:
+  using: node20
+  main: generate-coverage-badge.js
