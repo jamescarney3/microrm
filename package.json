@@ -1,6 +1,6 @@
 {
   "name": "@jamescarney3/microrm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "./dist/microrm.js",
   "module": "./dist/microrm.js",
