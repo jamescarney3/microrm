@@ -1,17 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from 'vitest';
 
-import {
-  hasOwnOrInherits,
-  runningInStandalone,
-  runningOnIOS,
-  hasBeforeInstallPromptEvent,
-  formatEvalString,
-  validateLegsScore,
-  roundNumber,
-} from "~/lib/utils";
+import { hasOwnOrInherits } from '~/lib/utils';
 
-describe("utils module", () => {
-  describe("hasOwnOrInherits", () => {
+describe('utils module', () => {
+  describe('hasOwnOrInherits', () => {
     class ParentFoo {
       inheritedMethod() {}
       overwrittenMethod() {}
@@ -25,33 +17,32 @@ describe("utils module", () => {
     const bar = new ChildBar();
 
     beforeEach(() => {
-      bar.instanceProperty = "baz";
+      bar.instanceProperty = 'baz';
     });
 
-    it("returns true for inherited property", () => {
-      expect(hasOwnOrInherits(bar, "inheritedMethod")).toBe(true);
+    it('returns true for inherited property', () => {
+      expect(hasOwnOrInherits(bar, 'inheritedMethod')).toBe(true);
     });
 
-    it("returns true for prototype property", () => {
-      expect(hasOwnOrInherits(bar, "ownMethod")).toBe(true);
+    it('returns true for prototype property', () => {
+      expect(hasOwnOrInherits(bar, 'ownMethod')).toBe(true);
     });
 
-    it("returns true for instance property"),
-      () => {
-        expect(hasOwnOrInherits(bar, "instanceProperty")).toBe(true);
-      };
+    it('returns true for instance property', () => {
+      expect(hasOwnOrInherits(bar, 'instanceProperty')).toBe(true);
+    });
 
-    it("returns false for nonexistent property", () => {
-      expect(hasOwnOrInherits(bar, "nonexistentProperty")).toBe(false);
+    it('returns false for nonexistent property', () => {
+      expect(hasOwnOrInherits(bar, 'nonexistentProperty')).toBe(false);
 
       delete bar.instanceProperty;
-      expect(hasOwnOrInherits(bar, "instanceProperty")).toBe(false);
+      expect(hasOwnOrInherits(bar, 'instanceProperty')).toBe(false);
 
       delete bar.ownMethod;
-      expect(hasOwnOrInherits(bar, "ownMethod")).toBe(true);
+      expect(hasOwnOrInherits(bar, 'ownMethod')).toBe(true);
 
       delete bar.inheritedMethod;
-      expect(hasOwnOrInherits(bar, "inheritedMethod")).toBe(true);
+      expect(hasOwnOrInherits(bar, 'inheritedMethod')).toBe(true);
     });
   });
 });
