@@ -26,6 +26,7 @@ function setProp(target: Model, propName: string): void {
       this[backingField] = value;
       Observer.notify(this);
     },
+    configurable: true,
   });
 }
 
@@ -88,6 +89,7 @@ export function hasOne(relationName: string, options: RelationOptionsSignature) 
         value[foreignKey] = (<Model>this)[primaryKey];
         Observer.notify(this);
       },
+      configurable: true,
     });
   };
 }
