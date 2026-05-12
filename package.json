@@ -20,7 +20,8 @@
     "build:watch": "tsc -b --noEmit && vite build --watch",
     "compile:watch": "tsc -b --noEmit --watch",
     "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:verbose": "vitest --reporter=verbose",
     "test:ci": "vitest run --coverage --coverage.reporter=json-summary --watch=false",
     "test:coverage": "vitest run --coverage"
