@@ -1,20 +1,20 @@
-<svg width="105.3" height="20" viewBox="0 0 1053 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Coverage: 100%">
-  <title>Coverage: 100%</title>
-  <linearGradient id="mYunE" x2="0" y2="100%">
+<svg width="116.3" height="20" viewBox="0 0 1163 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Coverage: 98.44%">
+  <title>Coverage: 98.44%</title>
+  <linearGradient id="bxeYg" x2="0" y2="100%">
     <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
     <stop offset="1" stop-opacity=".1"/>
   </linearGradient>
-  <mask id="RCGxK"><rect width="1053" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#RCGxK)">
+  <mask id="vywvo"><rect width="1163" height="200" rx="30" fill="#FFF"/></mask>
+  <g mask="url(#vywvo)">
     <rect width="623" height="200" fill="#555"/>
-    <rect width="430" height="200" fill="#3C1" x="623"/>
-    <rect width="1053" height="200" fill="url(#mYunE)"/>
+    <rect width="540" height="200" fill="#3C1" x="623"/>
+    <rect width="1163" height="200" fill="url(#bxeYg)"/>
   </g>
-  <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
+  <g aria-hidden="true" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
     <text x="60" y="148" textLength="523" fill="#000" opacity="0.25">Coverage</text>
-    <text x="50" y="138" textLength="523">Coverage</text>
-    <text x="678" y="148" textLength="330" fill="#000" opacity="0.25">100%</text>
-    <text x="668" y="138" textLength="330">100%</text>
+    <text x="50" y="138" textLength="523" fill="#fff">Coverage</text>
+    <text x="678" y="148" textLength="440" fill="#000" opacity="0.25">98.44%</text>
+    <text x="668" y="138" textLength="440" fill="#fff">98.44%</text>
   </g>
   
 </svg>
