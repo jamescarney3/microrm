@@ -49,12 +49,28 @@ export default class Collection<T extends Model> extends Array {
     return super.find(predicate);
   }
 
+  slice(start?: number, end?: number): this {
+    return super.slice(start, end) as this;
+  }
+
+  filter(predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: unknown): this {
+    return super.filter(predicate, thisArg) as this;
+  }
+
+  sort(compareFn?: (a: T, b: T) => number): this {
+    return super.sort(compareFn);
+  }
+
+  concat(...items: (T | ConcatArray<T>)[]): this {
+    return super.concat(...items) as this;
+  }
+
   get last(): T | undefined {
-    return this.slice(-1)[0];
+    return this.slice(-1)[0] as T | undefined;
   }
 
   get first(): T | undefined {
-    return this[0];
+    return this[0] as T | undefined;
   }
 
   // pass in options with key prop = null for un-keyed collection

@@ -121,6 +121,7 @@ type ModelAttributes = Record<string, unknown>;
 // TODO: static nextId method for non-custom key subclasses
 
 export default class Model {
+  [key: string]: unknown;
   private static _meta = new Map();
 
   delete() {
