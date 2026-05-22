@@ -17,7 +17,7 @@ describe('Collection class', () => {
     it('returns unkeyed collection instance with null key option', () => {
       const collection = Collection.create(null, { key: null });
       expect(collection).toBeDefined();
-      expect(collection.key).not.toBeDefined('id');
+      expect(collection.key).not.toBeDefined();
     });
 
     it('throws error when elements have duplicate keys', () => {
@@ -46,6 +46,23 @@ describe('Collection class', () => {
       const duplicateIdModel = { id: 1 };
       collection.add(newModel);
       expect(() => collection.add(duplicateIdModel)).toThrowError();
+    });
+  });
+
+  describe('#delete', () => {
+    it('deletes an element from a collection', () => {
+      const collection = new Collection([1, 2, 3, 4, 5]);
+      const deleted = collection.delete(4);
+      expect(collection.includes(4)).toBe(false);
+      expect(deleted).toBe(4);
+    });
+    it('throws error when arg is undefined', () => {
+      const collection = new Collection([1, 2, 3, 4, 5]);
+      expect(() => collection.delete(undefined)).toThrowError();
+    });
+    it('throws error when arg is not in collection', () => {
+      const collection = new Collection([1, 2, 3, 4, 5]);
+      expect(() => collection.delete(6)).toThrowError();
     });
   });
 

@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import sinon from 'sinon';
 
 import Model, { prop, key, belongsTo, hasMany, hasOne } from '~/lib/v2/model';
@@ -7,7 +7,7 @@ import Store from '~/lib/v2/store';
 describe('Model class', () => {
   describe('::create', () => {
     beforeEach(() => {
-      sinon.stub(Store, 'all').returns({ add: sinon.stub() });
+      sinon.stub(Store, 'all').returns({ add: sinon.stub(), delete: sinon.stub() });
     });
 
     afterEach(() => {
@@ -82,13 +82,12 @@ describe('Model class', () => {
     it('removes the instance from the store collection', () => {
       class TestModel extends Model {}
       const instance = new TestModel() as TestModel;
+      const mockCollection = { delete: vi.fn() };
 
-      sinon.stub(Store, 'all').returns([instance]);
-
+      sinon.stub(Store, 'all').returns(mockCollection);
       instance.delete();
 
-      expect(Store.all('test-models').length).toBe(0);
-      expect(Store.all('test-models').includes(instance)).toBe(false);
+      expect(mockCollection.delete).toHaveBeenCalledWith(instance);
       Store.all.restore();
     });
   });
