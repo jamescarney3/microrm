@@ -1,6 +1,6 @@
 {
   "name": "@jamescarney3/microrm",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "type": "module",
   "main": "./dist/microrm.js",
   "module": "./dist/microrm.js",
@@ -30,6 +30,7 @@
     "@actions/core": "^3.0.0",
     "@actions/github": "^9.0.0",
     "@types/node": "^25.3.3",
+    "@types/sinon": "^21.0.1",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
     "@vitest/coverage-v8": "^4.0.18",

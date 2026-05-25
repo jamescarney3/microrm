@@ -2,10 +2,6 @@ import Store from '~/lib/v2/store';
 import Observer from '~/lib/v2/observer';
 import type Collection from '~/lib/v2/collection';
 
-interface ModelBase extends Model {
-  [key: string]: unknown;
-}
-
 const BASE_METADATA = {
   props: <string[]>[],
   associations: <string[]>[],
@@ -125,11 +121,11 @@ export default class Model {
   private static _meta = new Map();
 
   delete() {
-    const metadata = (this.constructor as typeof Model).meta as typeof BASE_METADATA;
+    const metadata = (this.constructor as typeof Model).meta;
     const collection = Store.all(metadata.storeKey);
-    const idx = collection.indexOf(this);
-    collection.splice(idx, 1);
+    const record = collection.delete(this);
     Observer.notify(this);
+    return record;
   }
 
   // this can't be a static prop, otherwise descendents will clobber the Model static var
@@ -170,7 +166,7 @@ export default class Model {
 
   static create(attributes: ModelAttributes) {
     // declare a fresh instance and assign whitelist of attributes
-    const instance = new this() as ModelBase;
+    const instance = new this();
 
     for (const propName of this.props) {
       if (propName in instance && instance[propName] === undefined) {
@@ -190,8 +186,8 @@ export default class Model {
       }
     }
 
-    Store.all(this.meta.storeKey).add(instance as Model);
+    Store.all(this.meta.storeKey).add(instance);
     Observer.notify(this);
-    return instance as Model;
+    return instance;
   }
 }

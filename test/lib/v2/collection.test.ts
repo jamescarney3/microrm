@@ -17,7 +17,7 @@ describe('Collection class', () => {
     it('returns unkeyed collection instance with null key option', () => {
       const collection = Collection.create(null, { key: null });
       expect(collection).toBeDefined();
-      expect(collection.key).not.toBeDefined('id');
+      expect(collection.key).not.toBeDefined();
     });
 
     it('throws error when elements have duplicate keys', () => {
@@ -46,6 +46,23 @@ describe('Collection class', () => {
       const duplicateIdModel = { id: 1 };
       collection.add(newModel);
       expect(() => collection.add(duplicateIdModel)).toThrowError();
+    });
+  });
+
+  describe('#delete', () => {
+    it('deletes an element from a collection', () => {
+      const collection = new Collection([1, 2, 3, 4, 5]);
+      const deleted = collection.delete(4);
+      expect(collection.includes(4)).toBe(false);
+      expect(deleted).toBe(4);
+    });
+    it('throws error when arg is undefined', () => {
+      const collection = new Collection([1, 2, 3, 4, 5]);
+      expect(() => collection.delete(undefined)).toThrowError();
+    });
+    it('throws error when arg is not in collection', () => {
+      const collection = new Collection([1, 2, 3, 4, 5]);
+      expect(() => collection.delete(6)).toThrowError();
     });
   });
 
@@ -86,14 +103,17 @@ describe('Collection class', () => {
       const darragh = { id: 5, name: 'darragh', bar: 'flannerys' };
       const collection = Collection.create([james, matt, maloof, ben, darragh]);
 
-      expect(collection.where({ bar: 'ohanlons' })).toContain(james, matt);
+      expect(collection.where({ bar: 'ohanlons' })).toContain(james);
+      expect(collection.where({ bar: 'ohanlons' })).toContain(matt);
       expect(collection.where({ bar: null })).toContain(maloof);
-      expect(collection.where({ bar: 'flannerys' })).toContain(ben, darragh);
+      expect(collection.where({ bar: 'flannerys' })).toContain(ben);
+      expect(collection.where({ bar: 'flannerys' })).toContain(darragh);
     });
   });
 
   describe('#findBy', () => {
     it('returns one colletion element that satisfies predicate callback', () => {
+      type MockPlayer = { name: string };
       const james = { id: 1, name: 'james', bar: 'ohanlons' };
       const matt = { id: 2, name: 'matt', bar: 'ohanlons' };
       const maloof = { id: 3, name: 'maloof', bar: null };
@@ -101,9 +121,9 @@ describe('Collection class', () => {
       const darragh = { id: 5, name: 'darragh', bar: 'flannerys' };
       const collection = Collection.create([james, matt, maloof, ben, darragh]);
 
-      const longPredicate = (player) => player.name.length === 5;
-      const shortPredicate = (player) => player.name.length === 6;
-      const badPredicate = (player) => player.name === 'tony roman';
+      const longPredicate = (player: MockPlayer) => player.name.length === 5;
+      const shortPredicate = (player: MockPlayer) => player.name.length === 6;
+      const badPredicate = (player: MockPlayer) => player.name === 'tony roman';
 
       expect(collection.findBy(longPredicate)).toBe(james);
       expect(collection.findBy(shortPredicate)).toBe(maloof);

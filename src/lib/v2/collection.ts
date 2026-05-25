@@ -33,6 +33,17 @@ export default class Collection<T extends Model> extends Array {
     this.push(model);
   }
 
+  delete<T extends Model>(model?: T): T {
+    const containsOperand = !!model && this.includes(model);
+    if (containsOperand) {
+      const idx = this.findIndex((e) => e === model);
+      this.splice(idx, 1);
+      return model;
+    } else {
+      throw new Error('operand not in Collection');
+    }
+  }
+
   get(key: string | number): T | undefined {
     if (!hasOwnOrInherits(this, 'key')) {
       throw new Error('cannot #get model from un-keyed Collection');
