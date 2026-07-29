@@ -20,7 +20,7 @@ module.exports = {
       },
     },
   },
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
+  ignorePatterns: ['.eslintrc.cjs', 'dist', 'test/lib/v2', 'test/lib/utils.test.ts'],
   parser: '@typescript-eslint/parser',
   rules: {
     'max-len': ['warn', 120],

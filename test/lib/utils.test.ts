@@ -1,3 +1,5 @@
+// @ts-nocheck
+// this whole file goes away when v2 is removed
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { hasOwnOrInherits } from '~/lib/utils';
