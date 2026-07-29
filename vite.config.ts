@@ -1,7 +1,11 @@
+/*
+  eslint-disable import/newline-after-import --
+  ignoring the dts import breaks this rule, disabling here since config
+  file import formatting doesn't have any effect outside of this file
+*/
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
-import babel from 'vite-plugin-babel';
+import dts from 'vite-plugin-dts'; // eslint-disable-line import/default
 
 // https://vitejs.dev/guide/build.html#library-mode
 export default defineConfig({
@@ -18,14 +22,5 @@ export default defineConfig({
       test: resolve(__dirname, './test'),
     },
   },
-  plugins: [
-    dts(),
-    babel({
-      babelConfig: {
-        babelrc: false,
-        configFile: false,
-        plugins: [['@babel/plugin-proposal-decorators', { loose: true, version: '2022-03' }]],
-      },
-    }),
-  ],
+  plugins: [dts()],
 });
