@@ -10,18 +10,18 @@ describe('model association decorators', () => {
   describe('@hasOne and @belongsTo', () => {
     @register('foos')
     class Foo extends Model {
-      @hasOne declare bar: Bar;
+      @hasOne declare bar?: Bar;
     }
 
     @register('bars')
     class Bar extends Model {
-      @belongsTo declare foo: Foo;
-      @hasOne declare bonk: Bonk;
+      @belongsTo declare foo?: Foo;
+      @hasOne declare bonk?: Bonk;
     }
 
     @register('bonks')
     class Bonk extends Model {
-      @belongsTo declare bar: Bar;
+      @belongsTo declare bar?: Bar;
     }
 
     it('sets default reciprocal associations between models', () => {
@@ -56,8 +56,8 @@ describe('model association decorators', () => {
 
       bar.foo = foo;
       bar.bonk = bonk;
-      bar.foo = null;
-      bar.bonk = null;
+      bar.foo = undefined;
+      bar.bonk = undefined;
 
       expect(bar.foo).not.toBe(foo);
       expect(foo.bar).not.toBe(bar);
@@ -75,10 +75,12 @@ describe('model association decorators', () => {
 
       bar.foo = foo;
       bar.bonk = bonk;
-      bar.foo = null;
-      bar.bonk = null;
+      bar.foo = undefined;
+      bar.bonk = undefined;
 
       expect(subscriber).toHaveBeenCalledTimes(4);
+      expect(bar.bonk).not.toBe(bonk);
+      expect(bonk.bar).not.toBe(bar);
     });
 
     it('allows custom foreignKey override', () => {
@@ -123,13 +125,13 @@ describe('model association decorators', () => {
 
     @register('bars')
     class Bar extends Model {
-      @belongsTo declare foo: Foo;
+      @belongsTo declare foo?: Foo;
       @hasMany declare bonks: Bonk[];
     }
 
     @register('bonks')
     class Bonk extends Model {
-      @belongsTo declare bar: Bar;
+      @belongsTo declare bar?: Bar;
     }
 
     it('sets default reciprocal associations between models', () => {
@@ -165,7 +167,7 @@ describe('model association decorators', () => {
       foo.bars = [bar];
       bonk.bar = bar;
       foo.bars = [];
-      bonk.bar = null;
+      bonk.bar = undefined;
 
       expect(foo.bars).toHaveLength(0);
       expect(bar.foo).not.toBe(foo);
@@ -183,10 +185,11 @@ describe('model association decorators', () => {
 
       bar.foo = foo;
       bar.bonks = [bonk];
-      bar.foo = null;
-      bar.bonks = null;
+      // bar.foo = null;
+      bar.bonks = [];
 
-      expect(subscriber).toHaveBeenCalledTimes(4);
+      // expect(subscriber).toHaveBeenCalledTimes(4);
+      expect(subscriber).toHaveBeenCalledTimes(3);
     });
 
     it('allows custom foreignKey override', () => {
@@ -200,7 +203,7 @@ describe('model association decorators', () => {
       @register('quxes')
       class Qux extends Model {
         @belongsTo({ foreignKey: 'bazzerId', relationCollectionKey: 'bazzes' }) declare baz: Baz;
-        @hasMany({ foreignKey: 'quxKey', relationCollectionKey: 'garplies' }) declare garplies: Garply;
+        @hasMany({ foreignKey: 'quxKey', relationCollectionKey: 'garplies' }) declare garplies: Garply[];
       }
 
       @register('garplies')

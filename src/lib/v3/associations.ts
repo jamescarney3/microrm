@@ -1,4 +1,4 @@
-import { transform, singularize } from 'inflection';
+import { transform, camelize, singularize } from 'inflection';
 import Observer from '~/lib/v2/observer';
 
 import Store from '~/lib/v3/store';
@@ -20,9 +20,9 @@ const deriveForeignKey = (propName: string, options: { override?: string } = {})
   const { override } = options;
   if (override) return override;
 
-  // TODO: look up key prop name on store metadata when modeled, use default 'Id' for now
   // TODO: look up prop case transformation on store metadata when modeled, use [] for now
-  return transform(propName + 'Id', []);
+  const keyString = 'Id'; // TODO: make this customizable store metadata and look up from there
+  return transform(propName + keyString, []);
 };
 
 const deriveRelationForeignKey = (modelInstance: Model, options: { override?: string } = {}): string => {
@@ -31,7 +31,7 @@ const deriveRelationForeignKey = (modelInstance: Model, options: { override?: st
 
   const keyString = 'Id'; // TODO: make this customizable store metadata and look up from there
   const ModelClass = <typeof Model>modelInstance.constructor;
-  return singularize(ModelClass.meta.storeKey) + keyString;
+  return singularize(camelize(ModelClass.meta.storeKey.replace('-', '_'), true)) + keyString;
 };
 
 function defineBelongsToProperty(
@@ -157,7 +157,7 @@ function defineHasManyProperty(
         .forEach((model) => delete model[relationForeignKey]);
 
       // set foreign keys on all passed in instances
-      (values || []).forEach((model) => {
+      values.forEach((model) => {
         model[relationForeignKey] = this.keyOrTemporaryKey;
       });
 

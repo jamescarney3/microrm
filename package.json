@@ -16,7 +16,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "vite build && npx tsc --emitDeclarationOnly --declaration --outDir dist",
     "build:watch": "tsc -b --noEmit && vite build --watch",
     "compile:watch": "tsc -b --noEmit --watch",
     "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
@@ -39,6 +39,7 @@
     "eslint-plugin-import": "^2.32.0",
     "sinon": "^21.0.2",
     "typescript": "~5.9.3",
+    "unplugin-dts": "^1.0.3",
     "vite": "^7.3.1",
     "vite-plugin-babel": "^1.5.1",
     "vite-plugin-dts": "^4.5.4",
