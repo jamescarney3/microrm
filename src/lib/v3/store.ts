@@ -16,10 +16,10 @@ class Store {
 
   // store data lives here relational lists; this is meant to mirror a relational database with
   // notes of ActiveRecord
-  _data: Record<string, Collection> = {};
+  _data: Record<string, Collection<Model>> = {};
 
-  static all(key: string): Collection {
-    return Store.instance._data[key] as Collection;
+  static all<T extends Model = Model>(key: string): Collection<T> {
+    return Store.instance._data[key] as Collection<T>;
   }
 }
 

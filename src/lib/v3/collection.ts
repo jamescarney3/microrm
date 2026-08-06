@@ -7,10 +7,10 @@ export type CollectionOptions = {
 // TODO: generic key collision detection algo either in separate function or instance method?
 
 // pseudo-keyed array to store and provide a relational list of Model instances
-export default class Collection extends Array {
+export default class Collection<T extends Model> extends Array<T> {
   declare key: string;
 
-  private constructor(data: Model[] = []) {
+  private constructor(data: T[] = []) {
     if (!Array.isArray(data)) {
       // non-destructive array built-in methods (e.g. filter, map) call the constructor with a
       // single array length arg and then mutate the result; any consumer instantiating one of
@@ -29,16 +29,25 @@ export default class Collection extends Array {
     return new Collection(data);
   }
 
-  get(key: string | number): Model | undefined {
+  delete(model: T): T {
+    const containsOperand = !!model && this.includes(model);
+    if (containsOperand) {
+      const idx = this.findIndex((e) => e === model);
+      this.splice(idx, 1);
+    }
+    return model;
+  }
+
+  get(key: string | number): T | undefined {
     return super.find((element) => element.keyOrTemporaryKey === key);
   }
 
-  where(attributes: Record<string, unknown>): Collection {
+  where(attributes: Record<string, unknown>): this {
     const props = Object.entries(attributes);
-    return this.filter((element) => props.every(([key, val]) => element[key] === val)) as Collection;
+    return this.filter((element) => props.every(([key, val]) => element[key] === val));
   }
 
-  findBy<Model>(predicate: (member: Model) => boolean): Model | undefined {
+  findBy(predicate: (member: T) => boolean): T | undefined {
     return super.find(predicate);
   }
 
@@ -49,24 +58,24 @@ export default class Collection extends Array {
   /* istanbul ignore start -- @preserve */
   // NB: this is for type hygeine; calling super and asserting the return type makes sure the compiler
   // knows we're getting back a Collection here instead of an Array instance
-  filter(predicate: (value: Model, index: number, array: Model[]) => unknown, thisArg?: unknown): this {
+  filter(predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: unknown): this {
     return super.filter(predicate, thisArg) as this;
   }
 
-  sort(compareFn?: (a: Model, b: Model) => number): this {
+  sort(compareFn?: (a: T, b: T) => number): this {
     return super.sort(compareFn);
   }
 
-  concat(...items: (Model | ConcatArray<Model>)[]): this {
+  concat(...items: (T | ConcatArray<T>)[]): this {
     return super.concat(...items) as this;
   }
   /* istanbul ignore stop -- @preserve */
 
-  get last(): Model | undefined {
-    return this.slice(-1)[0] as Model | undefined;
+  get last(): T | undefined {
+    return this.slice(-1)[0] as T | undefined;
   }
 
-  get first(): Model | undefined {
-    return this[0] as Model | undefined;
+  get first(): T | undefined {
+    return this[0] as T | undefined;
   }
 }

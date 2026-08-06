@@ -75,20 +75,20 @@ export default class Model {
   // https://thecodebarbarian.com/static-properties-in-javascript-with-inheritance.html
   static get meta() {
     if (!this._meta.has(this)) {
-      this._meta.set(this, { ...BASE_MODEL_METADATA });
+      this._meta.set(this, structuredClone(BASE_MODEL_METADATA));
     }
     return this._meta.get(this);
   }
 
-  static get all(): Collection {
+  static get all(): Collection<Model> {
     return Store.all(this.meta.storeKey);
   }
 
-  static where(attributes: Record<string, unknown>): Collection {
+  static where(attributes: Record<string, unknown>): Collection<Model> {
     return Store.all(this.meta.storeKey).where(attributes);
   }
 
-  static create(props: Record<string, unknown> = {}) {
+  static create<T extends typeof Model>(this: T, props: Record<string, unknown> = {}): InstanceType<T> {
     const storeKey = this.meta.storeKey;
     const instance = new this();
 
@@ -96,7 +96,8 @@ export default class Model {
     assignRelations(instance, props);
 
     Store.all(storeKey).push(instance);
-    return instance;
+    Observer.notify(this);
+    return instance as InstanceType<T>;
   }
 
   get keyOrTemporaryKey(): string {
@@ -104,5 +105,19 @@ export default class Model {
     const key = ModelClass.meta.key;
 
     return <string>this[key] || this._temporaryKey;
+  }
+
+  // TODO: unset for properties?
+  // unset(propName: [[something from constructor meta props??]]): void {
+  //   delete from instance
+  //   notify observer
+  // }
+
+  delete() {
+    const metadata = (this.constructor as typeof Model).meta;
+    const collection = Store.all(metadata.storeKey);
+    const record = collection.delete(this);
+    Observer.notify(this);
+    return record;
   }
 }

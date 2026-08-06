@@ -1,11 +1,6 @@
-/*
-  eslint-disable import/newline-after-import --
-  ignoring the dts import breaks this rule, disabling here since config
-  file import formatting doesn't have any effect outside of this file
-*/
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts'; // eslint-disable-line import/default
+import dts from 'unplugin-dts/vite';
 
 // https://vitejs.dev/guide/build.html#library-mode
 export default defineConfig({
@@ -22,5 +17,5 @@ export default defineConfig({
       test: resolve(__dirname, './test'),
     },
   },
-  plugins: [dts()],
+  plugins: [dts({ tsconfigPath: resolve(__dirname, 'tsconfig.json'), insertTypesEntry: true })],
 });

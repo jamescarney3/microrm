@@ -58,21 +58,47 @@ describe('Collection class', () => {
 
   describe('#findBy', () => {
     it('returns one colletion element that satisfies predicate callback', () => {
-      type MockPlayer = { name: string };
-      const james = { id: 1, name: 'james', bar: 'ohanlons' };
-      const matt = { id: 2, name: 'matt', bar: 'ohanlons' };
-      const maloof = { id: 3, name: 'maloof', bar: null };
-      const ben = { id: 4, name: 'ben', bar: 'flannerys' };
-      const darragh = { id: 5, name: 'darragh', bar: 'flannerys' };
+      const james = { id: 1, name: 'james', bar: 'ohanlons' } as unknown as Model;
+      const matt = { id: 2, name: 'matt', bar: 'ohanlons' } as unknown as Model;
+      const maloof = { id: 3, name: 'maloof', bar: null } as unknown as Model;
+      const ben = { id: 4, name: 'ben', bar: 'flannerys' } as unknown as Model;
+      const darragh = { id: 5, name: 'darragh', bar: 'flannerys' } as unknown as Model;
       const collection = Collection.create([james, matt, maloof, ben, darragh] as unknown as Model[]);
 
-      const longPredicate = (player: MockPlayer) => player.name.length === 5;
-      const shortPredicate = (player: MockPlayer) => player.name.length === 6;
-      const badPredicate = (player: MockPlayer) => player.name === 'tony roman';
+      const longPredicate = (player: Model) => (<string>player.name).length === 5;
+      const shortPredicate = (player: Model) => (<string>player.name).length === 6;
+      const badPredicate = (player: Model) => player.name === 'tony roman';
 
       expect(collection.findBy(longPredicate)).toBe(james);
       expect(collection.findBy(shortPredicate)).toBe(maloof);
       expect(collection.findBy(badPredicate)).not.toBeDefined();
+    });
+  });
+
+  describe('#delete', () => {
+    it('deletes an item from a collection', () => {
+      const targetModel = { keyOrTemporaryKey: 3 } as unknown as Model;
+      const otherModels = [
+        { keyOrTemporaryKey: 1 },
+        { keyOrTemporaryKey: 2 },
+        { keyOrTemporaryKey: 4 },
+      ] as unknown as Model[];
+      const collection = Collection.create([...otherModels, targetModel]);
+      const deleted = collection.delete(targetModel);
+      expect(collection).not.toContain(targetModel);
+      expect(deleted).toBe(deleted);
+    });
+
+    it('does not error when item is not presentin collection', () => {
+      const targetModel = { keyOrTemporaryKey: 3 } as unknown as Model;
+      const otherModels = [
+        { keyOrTemporaryKey: 1 },
+        { keyOrTemporaryKey: 2 },
+        { keyOrTemporaryKey: 4 },
+      ] as unknown as Model[];
+      const collection = Collection.create([...otherModels]);
+      const deleted = collection.delete(targetModel);
+      expect(deleted).toBe(deleted);
     });
   });
 });

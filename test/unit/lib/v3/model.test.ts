@@ -22,7 +22,7 @@ describe('Model class', () => {
 
     it('adds the created instance to the store', () => {
       const mockPush = vi.fn();
-      vi.mocked(Store.all).mockReturnValueOnce({ push: mockPush } as unknown as Collection);
+      vi.mocked(Store.all).mockReturnValueOnce({ push: mockPush } as unknown as Collection<Model>);
 
       class Foo extends Model {}
       Foo.create();
@@ -44,7 +44,7 @@ describe('Model class', () => {
   describe('::all', () => {
     it('returns store collection for model', () => {
       vi.mocked(Store.all).mockImplementationOnce(
-        (key: string) => (key === 'foos' ? 'foo collection' : 'something else') as unknown as Collection,
+        (key: string) => (key === 'foos' ? 'foo collection' : 'something else') as unknown as Collection<Model>,
       );
 
       class Foo extends Model {}
@@ -64,48 +64,32 @@ describe('Model class', () => {
         if (key === 'foos')
           return {
             where: (params: Record<string, unknown>) =>
-              (params.foo === 'bar' ? 'matching foos' : 'something else') as unknown as Collection,
-          } as unknown as Collection;
-        return {} as unknown as Collection;
+              (params.foo === 'bar' ? 'matching foos' : 'something else') as unknown as Collection<Model>,
+          } as unknown as Collection<Model>;
+        return {} as unknown as Collection<Model>;
       });
 
       expect(Foo.where(whereParams)).toBe('matching foos');
     });
   });
 
-  // describe('#delete', () => {
-  //   // it('removes the instance from the store collection', () => {
-  //   //   class TestModel extends Model {}
-  //   //   const instance = new TestModel() as TestModel;
-  //   //   const mockCollection = { delete: vi.fn() };
-  //   //   sinon.stub(Store, 'all').returns(mockCollection);
-  //   //   instance.delete();
-  //   //   expect(mockCollection.delete).toHaveBeenCalledWith(instance);
-  //   //   Store.all.restore();
-  //   // });
-  //   // it('deletes dependent associated instances', () => {
-  //   //   const mockCollection = { delete: vi.fn() };
-  //   //   sinon.stub(Store, 'all').returns(mockCollection);
-  //   //   const mockBar = { delete: vi.fn() };
-  //   //   const mockBazzes = [{ delete: vi.fn() }, { delete: vi.fn() }];
-  //   //   class Foo extends Model {
-  //   //     bar = {};
-  //   //     bazzes = [];
-  //   //   }
-  //   //   const foo = new Foo();
-  //   //   vi.spyOn(foo, 'bar', 'get').mockReturnValue(mockBar);
-  //   //   vi.spyOn(foo, 'bazzes', 'get').mockReturnValue(mockBazzes);
-  //   //   vi.spyOn(Foo.meta, 'dependents', 'get').mockReturnValue([
-  //   //     { name: 'bar', association: 'hasOne', method: 'delete' },
-  //   //     { name: 'bazzes', association: 'hasMany', method: 'delete' },
-  //   //   ]);
-  //   //   foo.delete();
-  //   //   expect(mockBar.delete).toHaveBeenCalled();
-  //   //   expect(mockBazzes[0].delete).toHaveBeenCalled();
-  //   //   expect(mockBazzes[1].delete).toHaveBeenCalled();
-  //   //   Store.all.restore();
-  //   // });
-  // });
+  describe('#delete', () => {
+    it('deletes mdoel instance from its store', () => {
+      class Foo extends Model {}
+      Foo.meta.storeKey = 'foos';
+
+      const mockCollection = { delete: vi.fn() };
+      vi.mocked(Store.all).mockImplementationOnce((key: string) => {
+        if (key === 'foos') return mockCollection as unknown as Collection<Foo>;
+        return {} as unknown as Collection<Foo>;
+      });
+
+      const foo = new Foo();
+      foo.delete();
+
+      expect(mockCollection.delete).toHaveBeenCalledWith(foo);
+    });
+  });
 
   describe('@prop property decorator', () => {
     it('defines an accessor on a model instance', () => {
