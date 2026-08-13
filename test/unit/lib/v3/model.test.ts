@@ -112,16 +112,5 @@ describe('Model class', () => {
       foo.bar = 'baz';
       expect(foo.keyOrTemporaryKey).toBe('baz');
     });
-
-    // it('does not allow multiple keys', () => {
-    //   const declareClassWithTwoKeys = () => {
-    //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    //     class Foo extends Model {
-    //       @key declare bar: string;
-    //       @key declare baz: string;
-    //     }
-    //   };
-    //   expect(declareClassWithTwoKeys).toThrowError();
-    // });
   });
 });

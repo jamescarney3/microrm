@@ -25,8 +25,8 @@ export default class Collection<T extends Model> extends Array<T> {
     }
   }
 
-  static create(data: Model[] = []) {
-    return new Collection(data);
+  static create<T extends Model>(data: T[] = []) {
+    return new Collection<T>(data);
   }
 
   delete(model: T): T {

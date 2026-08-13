@@ -16,10 +16,6 @@ class Store {
   static all<T extends Model>(key: string): Collection<T> {
     return Store.instance._data[key] as Collection<T>;
   }
-
-  // static get<T extends Model>(key: string, id: keyof Model): T | undefined {
-  //   return (<Collection<T>>Store.instance._data[key]).get(id);
-  // }
 }
 
 export function register(storeKey: string) {
